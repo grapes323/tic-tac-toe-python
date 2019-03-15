@@ -1,50 +1,94 @@
-import random
+#initialize variables
+player = 1 
+win = 1
+running = 0
+game = running
+mark = 'X'
+board = [' ',' ',' ',' ',' ',' ',' ',' ',' ',' '] 
+tie = -1
 
-#draw the game board 
-def gameBoard(board):
+
+#draw game board
+def gameBoard():
     print(' ' + board[1] + ' | ' + board[2] + ' | ' + board[3])
     print('___________')
     print(' ' + board[4] + ' | ' + board[5] + ' | ' + board[6])
     print('___________')
     print(' ' + board[7] + ' | ' + board[8] + ' | ' + board[9])
-
-#select who goes first, human or computer
-#select random number 0 or 1, if 0 then computer goes first, else human goes first
-def goesFirst():
-    if random.randint(0, 1) == 0:
-        return 'computer'
+    
+#check if position is empty or not    
+def checkPosition(x):
+    if(board[x] == ' '):
+        return True
     else:
-        return 'human'
+        return False
 
-
-#human selects the mark first, and the other mark will be the computer (X and O)
-#create a list where the human mark is the first item, and computer second, upper case it.
-#if not X or O then ask again
-def humanMark():
-    mark = ''
-    while not (mark == 'X' or mark == 'O'):
-        print('Will you be X or O?')
-        mark = input().upper()
-
-    if mark == 'X':
-        return ['X', 'O']
+#who is the winner
+def theWinner():
+    global game
+    #horizontal top
+    if(board[1] == board[2] and board[2] == board[3] and board[1] != ' '):
+        game = win
+    #horizontal middle
+    elif(board[4] == board[5] and board[5] == board[6] and board[4] != ' '):
+        game = win
+    #horizontal bottom
+    elif(board[7] == board[8] and board[8] == board[9] and board[7] != ' '):
+        game = win
+    #vertical left
+    elif(board[1] == board[4] and board[4] == board[7] and board[1] != ' '):
+        game = win
+    #vertical middle
+    elif(board[2] == board[5] and board[5] == board[8] and board[2] != ' '):
+        game = win
+    #vertical right
+    elif(board[3] == board[6] and board[6] == board[9] and board[3] != ' '):
+        game = win
+    #diagonal
+    elif(board[1] == board[5] and board[5] == board[9] and board[5] != ' '):
+        game = win
+    elif(board[3] == board[5] and board[5] == board[7] and board[5] != ' '):
+        game = win
+    #tie if all positions are filled
+    elif(board[1]!=' ' and board[2]!=' ' and board[3]!=' ' and board[4]!=' ' and board[5]!=' ' and board[6]!=' ' and board[7]!=' ' and board[8]!=' ' and board[9]!=' '):
+        game = tie
     else:
-        return ['O', 'X']
+        game = running
 
-#list out all possible combinations for a winner
-def theWinner(board, mark):
-    return (
-        #horizontal top
-        (board[1] == mark and board[2] == mark and board[3] == mark) or
-        #horizontal middle
-        (board[4] == mark and board[5] == mark and board[6] == mark) or
-        #horizontal bottom
-        (board[7] == mark and board[8] == mark and board[9] == mark) or
-        #vertical left
-        (board[1] == mark and board[3] == mark and board[5] == mark) or
-        #vertical middle
-        (board[2] == mark and board[4] == mark and board[6] == mark) or
-        #vertical right
-        (board[3] == mark and board[6] == mark and board[9] == mark) 
-    )
 
+print("Player 1 is [X], Player 2 is [O]")
+print()
+print("Numbers for each position:")
+print()
+print(' 1 | 2 | 3')
+print('___________')
+print(' 4 | 5 | 6')
+print('___________')
+print(' 7 | 8 | 9')
+print()
+print("Now let's play!")
+print()
+
+while(game == running):
+    gameBoard()
+    if(player % 2 != 0):
+        print("Player 1's turn")
+        mark = 'X'
+    else:
+        print("Player 2's turn")
+        mark = 'O'
+    choice = int(input("Type the position of you want to mark "))
+    if(checkPosition(choice)):
+        board[choice] = mark
+        player+=1
+        theWinner()
+    
+gameBoard()
+if(game==tie):
+    print("It's a tie!")
+elif(game==win):
+    player-=1
+    if(player%2!=0):
+        print("The winner is Player 1!!")
+    else:
+        print("The winner is Player 2!! Congratulations")
